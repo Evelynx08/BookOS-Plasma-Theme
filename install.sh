@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
-# BookOS Plasma color-scheme installer
-# Installs BookOS color-schemes (.colors) into KDE Plasma.
+# BookOS Plasma Theme installer.
+# Installs BookOS color-schemes (.colors) and Plasma desktopthemes (panel/widgets/dialogs).
 
 set -euo pipefail
 
@@ -19,7 +19,8 @@ err()  { printf "%s[x]%s %s\n"    "$C_RED"    "$C_RESET" "$*" >&2; }
 
 # ---- Paths -----------------------------------------------------------------
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-SRC_DIR="$SCRIPT_DIR/color-schemes"
+SRC_SCHEMES="$SCRIPT_DIR/color-schemes"
+SRC_DESKTOPTHEME="$SCRIPT_DIR/desktoptheme"
 
 VALID_COLORS=(blue red green purple orange pink)
 VALID_MODES=(dark light)
@@ -30,10 +31,16 @@ MODES=()
 SYSTEM=0
 ALL=0
 FORCE=0
+ONLY_SCHEMES=0
+ONLY_THEME=0
 
 usage() {
     cat <<EOF
-${C_BOLD}BookOS Color Scheme Installer${C_RESET}
+${C_BOLD}BookOS Plasma Theme Installer${C_RESET}
+
+Installs:
+  - Color schemes (window/button/widget colors)
+  - Plasma desktopthemes (panel, system tray, dialogs, widgets)
 
 Usage: $0 [options]
 
@@ -43,17 +50,22 @@ ${C_BOLD}Color flags${C_RESET} (pick one or more, default: blue):
 ${C_BOLD}Mode flags${C_RESET} (pick one or both, default: both):
   --dark --light
 
+${C_BOLD}Component flags${C_RESET} (default: install both):
+  --schemes-only       Install only color schemes
+  --desktoptheme-only  Install only Plasma desktopthemes
+
 ${C_BOLD}Other${C_RESET}:
-  --all       Install every color and mode (12 schemes)
+  --all       Install every color and mode (12 of each component)
   --system    Install system-wide to /usr/share (requires sudo)
   --force     Overwrite without asking
   -h, --help  Show this help
 
 ${C_BOLD}Examples${C_RESET}:
-  $0 --blue --dark              ${C_DIM}# Just BookOS Dark Blue${C_RESET}
+  $0 --blue --dark              ${C_DIM}# Just BookOS Dark Blue (both components)${C_RESET}
   $0 --red --green              ${C_DIM}# Red and Green, both modes${C_RESET}
   $0 --all                      ${C_DIM}# Everything${C_RESET}
-  sudo $0 --all --system        ${C_DIM}# All schemes, system-wide${C_RESET}
+  $0 --all --schemes-only       ${C_DIM}# All color schemes, no desktoptheme${C_RESET}
+  sudo $0 --all --system        ${C_DIM}# All, system-wide${C_RESET}
 EOF
 }
 
@@ -62,10 +74,12 @@ while [[ $# -gt 0 ]]; do
     case "$1" in
         --blue|--red|--green|--purple|--orange|--pink) COLORS+=("${1#--}") ;;
         --dark|--light) MODES+=("${1#--}") ;;
-        --all)    ALL=1 ;;
-        --system) SYSTEM=1 ;;
-        --force)  FORCE=1 ;;
-        -h|--help) usage; exit 0 ;;
+        --all)               ALL=1 ;;
+        --system)            SYSTEM=1 ;;
+        --force)             FORCE=1 ;;
+        --schemes-only)      ONLY_SCHEMES=1 ;;
+        --desktoptheme-only) ONLY_THEME=1 ;;
+        -h|--help)           usage; exit 0 ;;
         *) err "Unknown option: $1"; usage; exit 1 ;;
     esac
     shift
@@ -78,71 +92,127 @@ fi
 [[ ${#COLORS[@]} -eq 0 ]] && COLORS=(blue)
 [[ ${#MODES[@]}  -eq 0 ]] && MODES=("${VALID_MODES[@]}")
 
+INSTALL_SCHEMES=1
+INSTALL_THEME=1
+[[ $ONLY_SCHEMES -eq 1 ]] && INSTALL_THEME=0
+[[ $ONLY_THEME   -eq 1 ]] && INSTALL_SCHEMES=0
+
 # ---- Resolve destination ---------------------------------------------------
 if [[ $SYSTEM -eq 1 ]]; then
     if [[ $EUID -ne 0 ]]; then
         err "--system requires root. Run with sudo."
         exit 1
     fi
-    DST_DIR="/usr/share/color-schemes"
+    DST_SCHEMES="/usr/share/color-schemes"
+    DST_THEME="/usr/share/plasma/desktoptheme"
 else
-    DST_DIR="${XDG_DATA_HOME:-$HOME/.local/share}/color-schemes"
+    DST_SCHEMES="${XDG_DATA_HOME:-$HOME/.local/share}/color-schemes"
+    DST_THEME="${XDG_DATA_HOME:-$HOME/.local/share}/plasma/desktoptheme"
 fi
 
-mkdir -p "$DST_DIR"
-
-# ---- Verify source ---------------------------------------------------------
-if [[ ! -d "$SRC_DIR" ]]; then
-    err "Color schemes folder not found: $SRC_DIR"
-    exit 1
-fi
-
-# ---- Summary before install ------------------------------------------------
+# ---- Helpers ---------------------------------------------------------------
 cap() { local s="$1"; echo "${s^}"; }
 
+# ---- Banner ----------------------------------------------------------------
 echo
-printf "%s%sBookOS Color Scheme Installer%s\n" "$C_BOLD" "$C_BLUE" "$C_RESET"
+printf "%s%sBookOS Plasma Theme Installer%s\n" "$C_BOLD" "$C_BLUE" "$C_RESET"
 printf "%s\n" "$(printf '%.0s=' {1..32})"
-info "Destination: $DST_DIR"
-info "Colors:      ${COLORS[*]}"
-info "Modes:       ${MODES[*]}"
+info "Colors:           ${COLORS[*]}"
+info "Modes:            ${MODES[*]}"
+[[ $INSTALL_SCHEMES -eq 1 ]] && info "Schemes -> $DST_SCHEMES"
+[[ $INSTALL_THEME   -eq 1 ]] && info "Desktoptheme -> $DST_THEME"
 echo
 
-# ---- Install ---------------------------------------------------------------
-installed=0
-skipped=0
-missing=0
+# ---- Install color schemes -------------------------------------------------
+installed_s=0
+skipped_s=0
+missing_s=0
 
-for mode in "${MODES[@]}"; do
-    for color in "${COLORS[@]}"; do
-        name="BookOS$(cap "$mode")$(cap "$color").colors"
-        src="$SRC_DIR/$name"
-        dst="$DST_DIR/$name"
-
-        if [[ ! -f "$src" ]]; then
-            warn "Missing source: $name"
-            missing=$((missing+1))
-            continue
-        fi
-
-        if [[ -f "$dst" && $FORCE -ne 1 ]]; then
-            read -rp "$(printf '%s[?]%s %s exists. Overwrite? [y/N] ' "$C_YELLOW" "$C_RESET" "$name")" ans
-            if [[ ! "$ans" =~ ^[Yy]$ ]]; then
-                skipped=$((skipped+1))
+if [[ $INSTALL_SCHEMES -eq 1 ]]; then
+    if [[ ! -d "$SRC_SCHEMES" ]]; then
+        err "color-schemes folder not found: $SRC_SCHEMES"
+        exit 1
+    fi
+    mkdir -p "$DST_SCHEMES"
+    printf "%s\n" "${C_BOLD}Color schemes${C_RESET}"
+    for mode in "${MODES[@]}"; do
+        for color in "${COLORS[@]}"; do
+            name="BookOS$(cap "$mode")$(cap "$color").colors"
+            src="$SRC_SCHEMES/$name"
+            dst="$DST_SCHEMES/$name"
+            if [[ ! -f "$src" ]]; then
+                warn "Missing source: $name"
+                missing_s=$((missing_s+1))
                 continue
             fi
-        fi
-
-        cp "$src" "$dst"
-        ok "Installed $name"
-        installed=$((installed+1))
+            if [[ -f "$dst" && $FORCE -ne 1 ]]; then
+                read -rp "$(printf '%s[?]%s %s exists. Overwrite? [y/N] ' "$C_YELLOW" "$C_RESET" "$name")" ans
+                if [[ ! "$ans" =~ ^[Yy]$ ]]; then
+                    skipped_s=$((skipped_s+1))
+                    continue
+                fi
+            fi
+            cp "$src" "$dst"
+            ok "Installed $name"
+            installed_s=$((installed_s+1))
+        done
     done
-done
+    echo
+fi
 
-echo
+# ---- Install desktopthemes -------------------------------------------------
+installed_t=0
+skipped_t=0
+missing_t=0
+
+if [[ $INSTALL_THEME -eq 1 ]]; then
+    if [[ ! -d "$SRC_DESKTOPTHEME" ]]; then
+        err "desktoptheme folder not found: $SRC_DESKTOPTHEME"
+        exit 1
+    fi
+    mkdir -p "$DST_THEME"
+    printf "%s\n" "${C_BOLD}Desktopthemes${C_RESET}"
+    for mode in "${MODES[@]}"; do
+        for color in "${COLORS[@]}"; do
+            name="BookOS-$(cap "$mode")-$(cap "$color")"
+            src="$SRC_DESKTOPTHEME/$name"
+            dst="$DST_THEME/$name"
+            if [[ ! -d "$src" ]]; then
+                warn "Missing source: $name"
+                missing_t=$((missing_t+1))
+                continue
+            fi
+            if [[ -d "$dst" && $FORCE -ne 1 ]]; then
+                read -rp "$(printf '%s[?]%s %s exists. Overwrite? [y/N] ' "$C_YELLOW" "$C_RESET" "$name")" ans
+                if [[ ! "$ans" =~ ^[Yy]$ ]]; then
+                    skipped_t=$((skipped_t+1))
+                    continue
+                fi
+                rm -rf "$dst"
+            elif [[ -d "$dst" ]]; then
+                rm -rf "$dst"
+            fi
+            cp -r "$src" "$dst"
+            ok "Installed $name"
+            installed_t=$((installed_t+1))
+        done
+    done
+    echo
+fi
+
+# ---- Summary ---------------------------------------------------------------
 printf "%s\n" "$(printf '%.0s-' {1..32})"
-ok "Installed: $installed"
-[[ $skipped -gt 0 ]] && warn "Skipped:   $skipped"
-[[ $missing -gt 0 ]] && warn "Missing:   $missing"
+if [[ $INSTALL_SCHEMES -eq 1 ]]; then
+    ok "Color schemes: $installed_s installed"
+    [[ $skipped_s -gt 0 ]] && warn "  skipped: $skipped_s"
+    [[ $missing_s -gt 0 ]] && warn "  missing: $missing_s"
+fi
+if [[ $INSTALL_THEME -eq 1 ]]; then
+    ok "Desktopthemes: $installed_t installed"
+    [[ $skipped_t -gt 0 ]] && warn "  skipped: $skipped_t"
+    [[ $missing_t -gt 0 ]] && warn "  missing: $missing_t"
+fi
 echo
-info "Activate from: System Settings -> Colors"
+info "Activate from:"
+info "  Colors:       System Settings -> Colors"
+info "  Desktoptheme: System Settings -> Plasma Style"
