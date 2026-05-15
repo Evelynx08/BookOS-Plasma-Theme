@@ -198,7 +198,8 @@ def copy_file(src_path: str, dst_path: str, recolor):
     else:
         shutil.copy2(src_path, dst_path)
 
-def make_metadata(mode: str, accent: str) -> str:
+def make_metadata_desktop(mode: str, accent: str) -> str:
+    """Plasma 5 compatibility."""
     nice_mode = mode.capitalize()
     nice_accent = accent.capitalize()
     plugin = f"bookos-{mode}-{accent}"
@@ -214,6 +215,27 @@ X-KDE-PluginInfo-Name={plugin}
 X-KDE-PluginInfo-Version=1.0.0
 X-Plasma-API=5.0
 """
+
+def make_metadata_json(mode: str, accent: str) -> str:
+    """Plasma 6 format."""
+    import json
+    nice_mode = mode.capitalize()
+    nice_accent = accent.capitalize()
+    plugin = f"bookos-{mode}-{accent}"
+    name = f"BookOS {nice_mode} {nice_accent}"
+    data = {
+        "KPlugin": {
+            "Authors": [{"Email": "", "Name": "BookOS"}],
+            "Category": "Plasma Theme",
+            "Description": f"BookOS {nice_mode} {nice_accent} - Plasma Desktop Theme",
+            "Id": plugin,
+            "License": "GPL-3.0",
+            "Name": name,
+            "Version": "1.0.0",
+        },
+        "X-Plasma-API": "6.0",
+    }
+    return json.dumps(data, indent=4)
 
 def build_one(mode: str, accent: str):
     name = f"BookOS-{mode.capitalize()}-{accent.capitalize()}"
@@ -239,7 +261,9 @@ def build_one(mode: str, accent: str):
                 print(f"  SKIP {rel}: {e}")
 
     with open(os.path.join(dst, "metadata.desktop"), "w") as f:
-        f.write(make_metadata(mode, accent))
+        f.write(make_metadata_desktop(mode, accent))
+    with open(os.path.join(dst, "metadata.json"), "w") as f:
+        f.write(make_metadata_json(mode, accent))
 
     print(f"[OK] {name} ({count} files)")
 

@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "Plasma Theme",
+        "Description": "BookOS Light Orange - Plasma Desktop Theme",
+        "Id": "bookos-light-orange",
+        "License": "GPL-3.0",
+        "Name": "BookOS Light Orange",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API": "6.0"
+}

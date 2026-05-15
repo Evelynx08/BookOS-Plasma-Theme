@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "Plasma Theme",
+        "Description": "BookOS Dark Blue - Plasma Desktop Theme",
+        "Id": "bookos-dark-blue",
+        "License": "GPL-3.0",
+        "Name": "BookOS Dark Blue",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API": "6.0"
+}

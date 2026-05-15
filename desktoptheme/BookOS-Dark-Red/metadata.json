@@ -1,0 +1,17 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "Plasma Theme",
+        "Description": "BookOS Dark Red - Plasma Desktop Theme",
+        "Id": "bookos-dark-red",
+        "License": "GPL-3.0",
+        "Name": "BookOS Dark Red",
+        "Version": "1.0.0"
+    },
+    "X-Plasma-API": "6.0"
+}
