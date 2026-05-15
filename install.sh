@@ -30,7 +30,6 @@ COLORS=()
 MODES=()
 SYSTEM=0
 ALL=0
-FORCE=0
 ONLY_SCHEMES=0
 ONLY_THEME=0
 
@@ -57,7 +56,6 @@ ${C_BOLD}Component flags${C_RESET} (default: install both):
 ${C_BOLD}Other${C_RESET}:
   --all       Install every color and mode (12 of each component)
   --system    Install system-wide to /usr/share (requires sudo)
-  --force     Overwrite without asking
   -h, --help  Show this help
 
 ${C_BOLD}Examples${C_RESET}:
@@ -76,7 +74,6 @@ while [[ $# -gt 0 ]]; do
         --dark|--light) MODES+=("${1#--}") ;;
         --all)               ALL=1 ;;
         --system)            SYSTEM=1 ;;
-        --force)             FORCE=1 ;;
         --schemes-only)      ONLY_SCHEMES=1 ;;
         --desktoptheme-only) ONLY_THEME=1 ;;
         -h|--help)           usage; exit 0 ;;
@@ -145,14 +142,7 @@ if [[ $INSTALL_SCHEMES -eq 1 ]]; then
                 missing_s=$((missing_s+1))
                 continue
             fi
-            if [[ -f "$dst" && $FORCE -ne 1 ]]; then
-                read -rp "$(printf '%s[?]%s %s exists. Overwrite? [y/N] ' "$C_YELLOW" "$C_RESET" "$name")" ans
-                if [[ ! "$ans" =~ ^[Yy]$ ]]; then
-                    skipped_s=$((skipped_s+1))
-                    continue
-                fi
-            fi
-            cp "$src" "$dst"
+            cp -f "$src" "$dst"
             ok "Installed $name"
             installed_s=$((installed_s+1))
         done
@@ -182,16 +172,7 @@ if [[ $INSTALL_THEME -eq 1 ]]; then
                 missing_t=$((missing_t+1))
                 continue
             fi
-            if [[ -d "$dst" && $FORCE -ne 1 ]]; then
-                read -rp "$(printf '%s[?]%s %s exists. Overwrite? [y/N] ' "$C_YELLOW" "$C_RESET" "$name")" ans
-                if [[ ! "$ans" =~ ^[Yy]$ ]]; then
-                    skipped_t=$((skipped_t+1))
-                    continue
-                fi
-                rm -rf "$dst"
-            elif [[ -d "$dst" ]]; then
-                rm -rf "$dst"
-            fi
+            [[ -d "$dst" ]] && rm -rf "$dst"
             cp -r "$src" "$dst"
             ok "Installed $name"
             installed_t=$((installed_t+1))
