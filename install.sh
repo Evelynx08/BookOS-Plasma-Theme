@@ -178,6 +178,18 @@ if [[ $INSTALL_THEME -eq 1 ]]; then
             installed_t=$((installed_t+1))
         done
     done
+
+    # Always install base themes (referenced by BookOS Look-and-Feel)
+    for base in bookos-dark bookos-light; do
+        src="$SRC_DESKTOPTHEME/$base"
+        dst="$DST_THEME/$base"
+        if [[ -d "$src" ]]; then
+            [[ -d "$dst" ]] && rm -rf "$dst"
+            cp -r "$src" "$dst"
+            ok "Installed $base (base)"
+            installed_t=$((installed_t+1))
+        fi
+    done
     echo
 fi
 
