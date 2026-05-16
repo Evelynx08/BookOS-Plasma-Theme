@@ -1,0 +1,17 @@
+[Desktop Entry]
+Comment=BookOS App-style window decoration (Dark)
+Encoding=UTF-8
+Name=BookOS-App-Dark
+Type=Service
+
+[KDE]
+ServiceTypes=KWin/AuroraeTheme
+X-KDE-PluginInfo-Author=BookOS
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Email=
+X-KDE-PluginInfo-License=GPL3.0
+X-KDE-PluginInfo-Name=__aurorae__svg__BookOS-App-Dark
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=
+X-KDE-ServiceTypes=KWin/AuroraeTheme

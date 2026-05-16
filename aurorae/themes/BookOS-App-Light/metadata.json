@@ -1,0 +1,19 @@
+{
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "",
+        "Description": "BookOS App-style window decoration (Light)",
+        "Id": "__aurorae__svg__BookOS-App-Light",
+        "License": "GPL-3.0",
+        "Name": "BookOS-App-Light",
+        "ServiceTypes": [
+            "KWin/AuroraeTheme"
+        ],
+        "Version": "1.0"
+    }
+}

@@ -22,6 +22,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SRC_SCHEMES="$SCRIPT_DIR/color-schemes"
 SRC_DESKTOPTHEME="$SCRIPT_DIR/desktoptheme"
 SRC_KVANTUM="$SCRIPT_DIR/kvantum"
+SRC_AURORAE="$SCRIPT_DIR/aurorae/themes"
 
 VALID_COLORS=(blue red green purple orange pink)
 VALID_MODES=(dark light)
@@ -35,6 +36,8 @@ ONLY_SCHEMES=0
 ONLY_THEME=0
 ONLY_KVANTUM=0
 NO_KVANTUM=0
+ONLY_AURORAE=0
+NO_AURORAE=0
 SKIP_PKG=0
 
 usage() {
@@ -58,6 +61,8 @@ ${C_BOLD}Component flags${C_RESET} (default: install all):
   --desktoptheme-only  Install only Plasma desktopthemes
   --kvantum-only       Install only Kvantum themes
   --no-kvantum         Skip Kvantum themes
+  --aurorae-only       Install only Aurorae window decorations
+  --no-aurorae         Skip Aurorae window decorations
 
 ${C_BOLD}Other${C_RESET}:
   --all        Install every color and mode (12 of each component)
@@ -85,6 +90,8 @@ while [[ $# -gt 0 ]]; do
         --desktoptheme-only) ONLY_THEME=1 ;;
         --kvantum-only)      ONLY_KVANTUM=1 ;;
         --no-kvantum)        NO_KVANTUM=1 ;;
+        --aurorae-only)      ONLY_AURORAE=1 ;;
+        --no-aurorae)        NO_AURORAE=1 ;;
         --skip-pkg)          SKIP_PKG=1 ;;
         -h|--help)           usage; exit 0 ;;
         *) err "Unknown option: $1"; usage; exit 1 ;;
@@ -102,10 +109,13 @@ fi
 INSTALL_SCHEMES=1
 INSTALL_THEME=1
 INSTALL_KVANTUM=1
-if [[ $ONLY_SCHEMES -eq 1 ]]; then INSTALL_THEME=0; INSTALL_KVANTUM=0; fi
-if [[ $ONLY_THEME   -eq 1 ]]; then INSTALL_SCHEMES=0; INSTALL_KVANTUM=0; fi
-if [[ $ONLY_KVANTUM -eq 1 ]]; then INSTALL_SCHEMES=0; INSTALL_THEME=0; fi
+INSTALL_AURORAE=1
+if [[ $ONLY_SCHEMES -eq 1 ]]; then INSTALL_THEME=0; INSTALL_KVANTUM=0; INSTALL_AURORAE=0; fi
+if [[ $ONLY_THEME   -eq 1 ]]; then INSTALL_SCHEMES=0; INSTALL_KVANTUM=0; INSTALL_AURORAE=0; fi
+if [[ $ONLY_KVANTUM -eq 1 ]]; then INSTALL_SCHEMES=0; INSTALL_THEME=0; INSTALL_AURORAE=0; fi
+if [[ $ONLY_AURORAE -eq 1 ]]; then INSTALL_SCHEMES=0; INSTALL_THEME=0; INSTALL_KVANTUM=0; fi
 [[ $NO_KVANTUM -eq 1 ]] && INSTALL_KVANTUM=0
+[[ $NO_AURORAE -eq 1 ]] && INSTALL_AURORAE=0
 
 # ---- Resolve destination ---------------------------------------------------
 if [[ $SYSTEM -eq 1 ]]; then
@@ -116,10 +126,12 @@ if [[ $SYSTEM -eq 1 ]]; then
     DST_SCHEMES="/usr/share/color-schemes"
     DST_THEME="/usr/share/plasma/desktoptheme"
     DST_KVANTUM="/usr/share/Kvantum"
+    DST_AURORAE="/usr/share/aurorae/themes"
 else
     DST_SCHEMES="${XDG_DATA_HOME:-$HOME/.local/share}/color-schemes"
     DST_THEME="${XDG_DATA_HOME:-$HOME/.local/share}/plasma/desktoptheme"
     DST_KVANTUM="${XDG_CONFIG_HOME:-$HOME/.config}/Kvantum"
+    DST_AURORAE="${XDG_DATA_HOME:-$HOME/.local/share}/aurorae/themes"
 fi
 
 # ---- Package install (kvantum) ---------------------------------------------
@@ -153,6 +165,7 @@ info "Modes:            ${MODES[*]}"
 [[ $INSTALL_SCHEMES -eq 1 ]] && info "Schemes -> $DST_SCHEMES"
 [[ $INSTALL_THEME   -eq 1 ]] && info "Desktoptheme -> $DST_THEME"
 [[ $INSTALL_KVANTUM -eq 1 ]] && info "Kvantum -> $DST_KVANTUM"
+[[ $INSTALL_AURORAE -eq 1 ]] && info "Aurorae -> $DST_AURORAE"
 echo
 
 # ---- Install color schemes -------------------------------------------------
@@ -252,6 +265,28 @@ if [[ $INSTALL_KVANTUM -eq 1 ]]; then
     fi
 fi
 
+# ---- Install Aurorae window decorations ------------------------------------
+installed_a=0
+
+if [[ $INSTALL_AURORAE -eq 1 ]]; then
+    if [[ ! -d "$SRC_AURORAE" ]]; then
+        warn "aurorae folder not found: $SRC_AURORAE (skipping)"
+    else
+        mkdir -p "$DST_AURORAE"
+        printf "%s\n" "${C_BOLD}Aurorae window decorations${C_RESET}"
+        for theme in "$SRC_AURORAE"/*/; do
+            [[ -d "$theme" ]] || continue
+            name="$(basename "$theme")"
+            dst="$DST_AURORAE/$name"
+            [[ -d "$dst" ]] && rm -rf "$dst"
+            cp -r "$theme" "$dst"
+            ok "Installed $name"
+            installed_a=$((installed_a+1))
+        done
+        echo
+    fi
+fi
+
 # ---- Summary ---------------------------------------------------------------
 printf "%s\n" "$(printf '%.0s-' {1..32})"
 if [[ $INSTALL_SCHEMES -eq 1 ]]; then
@@ -267,8 +302,12 @@ fi
 if [[ $INSTALL_KVANTUM -eq 1 ]]; then
     ok "Kvantum themes: $installed_k installed"
 fi
+if [[ $INSTALL_AURORAE -eq 1 ]]; then
+    ok "Aurorae decorations: $installed_a installed"
+fi
 echo
 info "Activate from:"
 info "  Colors:       System Settings -> Colors"
 info "  Desktoptheme: System Settings -> Plasma Style"
 [[ $INSTALL_KVANTUM -eq 1 ]] && info "  Kvantum:      run 'kvantummanager' and select bookos-dark-blue / bookos-light-blue"
+[[ $INSTALL_AURORAE -eq 1 ]] && info "  Decorations:  System Settings -> Window Decorations -> 'BookOS App Dark/Light'"
