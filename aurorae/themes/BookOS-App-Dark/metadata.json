@@ -1,18 +1,20 @@
 {
+    "KPackageStructure": "aurorae",
     "KPlugin": {
         "Authors": [
             {
-                "Email": "",
+                "Email": "noreply@bookos",
                 "Name": "BookOS"
             }
         ],
-        "Category": "",
+        "Category": "Plasma 6 Window Decorations",
         "Description": "BookOS App-style window decoration (Dark)",
-        "Id": "__aurorae__svg__BookOS-App-Dark",
+        "EnabledByDefault": true,
+        "Id": "BookOS-App-Dark",
         "License": "GPL-3.0",
         "Name": "BookOS-App-Dark",
         "ServiceTypes": [
-            "KWin/AuroraeTheme"
+            "aurorae"
         ],
         "Version": "1.0"
     }

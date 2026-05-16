@@ -1,5 +1,5 @@
 {
-    "KPackageStructure": "KWin/Aurorae",
+    "KPackageStructure": "aurorae",
     "KPlugin": {
         "Authors": [
             {
@@ -9,7 +9,7 @@
         ],
         "Category": "Plasma 6 Window Decorations",
         "ServiceTypes": [
-            "KWin/Aurorae"
+            "aurorae"
         ],
         "EnabledByDefault": true,
         "Name": "BookOS-Decoration-Light",
