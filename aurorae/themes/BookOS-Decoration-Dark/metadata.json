@@ -1,0 +1,23 @@
+{
+    "KPackageStructure": "KWin/Aurorae",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "noreply@bookos",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "Plasma 6 Window Decorations",
+        "ServiceTypes": [
+            "KWin/Aurorae"
+        ],
+        "EnabledByDefault": true,
+        "Name": "BookOS-Decoration-Dark",
+        "Description" : "BookOS Window Decoration for Plasma 6",
+        "Id": "BookOS-Decoration-Dark",
+        "Version": "1.2",
+        "License": "GPL-2.0+",
+        "X-KPackage-Dependencies": [
+        ]
+    }
+}
