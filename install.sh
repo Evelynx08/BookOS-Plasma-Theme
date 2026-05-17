@@ -306,6 +306,15 @@ if [[ $INSTALL_AURORAE -eq 1 ]]; then
     ok "Aurorae decorations: $installed_a installed"
 fi
 echo
+
+# ---- Refresh caches so KCMs see new themes ---------------------------------
+if [[ $SYSTEM -eq 0 ]]; then
+    command -v kbuildsycoca6 >/dev/null && kbuildsycoca6 --noincremental >/dev/null 2>&1 && ok "Refreshed plugin cache"
+    if command -v qdbus6 >/dev/null; then
+        qdbus6 org.kde.KWin /KWin reconfigure >/dev/null 2>&1 && ok "Signaled KWin reconfigure"
+    fi
+fi
+
 info "Activate from:"
 info "  Colors:       System Settings -> Colors"
 info "  Desktoptheme: System Settings -> Plasma Style"
