@@ -263,7 +263,7 @@
          sodipodi:nodetypes="cccssccc" />
       <path
          id="rect5073-4-9-6"
-         style="fill:#f5f5f5;fill-opacity:1;stroke:none;stroke-width:1"
+         style="fill:#F0F1F6;fill-opacity:1;stroke:none;stroke-width:1"
          d="m 313,201.063 c -6.648,0 -12,5.352 -12,12 v 17.93555 0.0644 h 29 v -30 z" />
       <path
          id="path955"
@@ -354,7 +354,7 @@
          inkscape:connector-curvature="0" />
     </g>
     <path
-       style="fill:#f5f5f5;fill-opacity:1;stroke:none"
+       style="fill:#F0F1F6;fill-opacity:1;stroke:none"
        d="m 470,200 v 86 h 145 v -86 z"
        id="decoration-inactive-center" />
     <g
@@ -373,7 +373,7 @@
          style="opacity:0.15;fill:#000000;fill-opacity:1;stroke:none"
          id="path6098-4-8" />
       <path
-         style="opacity:1;fill:#f5f5f5;fill-opacity:1;stroke:none;stroke-width:1"
+         style="opacity:1;fill:#F0F1F6;fill-opacity:1;stroke:none;stroke-width:1"
          d="m 325,176 v 30 h 145 v -30 z"
          id="path6092-3-3" />
       <path
@@ -397,7 +397,7 @@
          style="opacity:0.15;fill:#000000;fill-opacity:1;stroke:none;stroke-width:0.447214"
          inkscape:connector-curvature="0" />
       <path
-         style="opacity:1;fill:#f5f5f5;fill-opacity:1;stroke:none"
+         style="opacity:1;fill:#F0F1F6;fill-opacity:1;stroke:none"
          d="m 320.875,197.01548 v 86 h 29 v -86 z"
          id="path6339-9-9" />
     </g>
