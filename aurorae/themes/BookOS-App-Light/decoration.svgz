@@ -379,7 +379,7 @@
   <rect
      style="opacity:0.6;fill:#f2f2f7"
      id="decoration-center"
-     class="ColorScheme-Background"
+     class="ColorScheme-Background" fill="currentColor"
      width="50"
      height="50"
      x="28"
@@ -409,7 +409,7 @@
     <path
        style="opacity:0.6;fill:#f2f2f7;stroke-width:0.999998"
        id="path71"
-       class="ColorScheme-Background"
+       class="ColorScheme-Background" fill="currentColor"
        d="m 10.045471,16.999925 v 50 l 6.954552,10e-6 v -50 z"
        inkscape:connector-curvature="0" />
   </g>
@@ -438,7 +438,7 @@
     <path
        style="opacity:0.6;fill:#f2f2f7;stroke-width:0.999998"
        id="path79"
-       class="ColorScheme-Background"
+       class="ColorScheme-Background" fill="currentColor"
        d="m 73.954543,16.999935 v 50 l -6.954548,1e-5 v -50 z"
        inkscape:connector-curvature="0" />
   </g>
@@ -467,7 +467,7 @@
     <path
        style="opacity:0.6;fill:#f2f2f7;stroke-width:0.999998"
        id="path95"
-       class="ColorScheme-Background"
+       class="ColorScheme-Background" fill="currentColor"
        d="m 16.999975,73.954623 h 50.00002 v -6.954558 h -50.00001 z"
        inkscape:connector-curvature="0" />
   </g>
@@ -496,7 +496,7 @@
     <path
        style="opacity:0.6;fill:#f2f2f7;stroke-width:0.999997"
        id="path111"
-       class="ColorScheme-Background"
+       class="ColorScheme-Background" fill="currentColor"
        d="m 16.999975,10.045401 h 50.00002 v 6.954545 h -50.00001 z"
        inkscape:connector-curvature="0" />
   </g>
@@ -512,7 +512,7 @@
     <path
        style="opacity:0.6;fill:#f2f2f7;stroke-width:0.999998"
        id="path63"
-       class="ColorScheme-Background"
+       class="ColorScheme-Background" fill="currentColor"
        d="M 10.81834,3.8636375 V 10.818186 H 3.8636929 V 7.7474835 c 0,0 0,-1.5656634 1.1591079,-2.7247547 C 6.1819087,3.8636375 7.7475162,3.8636375 7.7475162,3.8636375 Z"
        inkscape:connector-curvature="0"
        sodipodi:nodetypes="cccczcc"
