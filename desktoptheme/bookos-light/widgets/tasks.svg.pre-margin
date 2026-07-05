@@ -53,7 +53,7 @@
        type="text/css"> 
       .ColorScheme-Text {
         
-        color:#5197FF;
+        color:#003687;
       }
       .ColorScheme-Background {
         color:#eff0f1;
@@ -152,8 +152,8 @@
      id="normal-hint-top-margin"
      x="88.000015"
      y="-58"
-     width="0.1"
-     height="6"
+     width="4"
+     height="0.1"
      fill="#ff00ff"
      style="stroke-width:0.158114" />
   <rect
@@ -161,22 +161,22 @@
      x="74"
      y="-50"
      width="0.1"
-     height="6"
+     height="4"
      fill="#ff00ff"
      style="stroke-width:0.158114" />
   <rect
      id="normal-hint-right-margin"
      x="102.00001"
      y="-50"
-     width="6"
-     height="0.1"
+     width="0.1"
+     height="4"
      fill="#ff00ff"
      style="stroke-width:0.158114" />
   <rect
      id="normal-hint-left-margin"
      x="88.000015"
      y="-43"
-     width="6"
+     width="4"
      height="0.1"
      fill="#ff00ff"
      style="stroke-width:0.158114" />
@@ -243,7 +243,7 @@
        fill="currentColor"
        style="opacity:0.01"
        sodipodi:nodetypes="csscc" />
-    <rect id="pill-focus-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#5197FF" style="opacity:1"/>
+    <rect id="pill-focus-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#2A69C7" style="opacity:1"/>
   </g>
   <g
      id="hover-center"
@@ -261,7 +261,7 @@
        height="48"
        x="-296"
        y="98"
-       fill="#002459"
+       fill="#C2D7F6"
        style="opacity:1;stroke-width:1.09193" />
   </g>
   <g
@@ -277,7 +277,7 @@
     <path
        id="rect1133-2-4"
        d="m -287,89 c -4.986,0 -9,4.014 -9,9 h 62 c 0,-4.986 -4.014,-9 -9,-9 z"
-       fill="#002459"
+       fill="#C2D7F6"
        style="opacity:1"
        sodipodi:nodetypes="sccss" />
   </g>
@@ -295,10 +295,10 @@
     <path
        id="rect1151-9-7"
        d="m -296,146 c 0,4.986 4.014,9 9,9 h 44 c 4.986,0 9,-4.014 9,-9 z"
-       fill="#002459"
+       fill="#C2D7F6"
        style="opacity:1"
        sodipodi:nodetypes="csscc" />
-    <rect id="pill-hover-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#5197FF" style="opacity:1"/>
+    <rect id="pill-hover-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#2A69C7" style="opacity:1"/>
   </g>
   <g
      id="normal-center"
@@ -356,7 +356,7 @@
        fill="currentColor"
        style="opacity:0.01"
        sodipodi:nodetypes="csscc" />
-    <rect id="pill-normal-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#C0D9FF" style="opacity:0.9"/>
+    <rect id="pill-normal-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#99B2D6" style="opacity:0.9"/>
   </g>
   <g
      id="minimized-center"
@@ -414,7 +414,7 @@
        fill="currentColor"
        style="opacity:0.01"
        sodipodi:nodetypes="csscc" />
-    <rect id="pill-minimized-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#C0D9FF" style="opacity:0.9"/>
+    <rect id="pill-minimized-bottom" width="14" height="4" x="-272" y="149" rx="2" ry="2" fill="#99B2D6" style="opacity:0.9"/>
   </g>
   <g
      id="progress-center"
