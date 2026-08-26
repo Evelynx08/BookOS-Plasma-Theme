@@ -1,0 +1,21 @@
+{
+    "KPackageStructure": "aurorae",
+    "KPlugin": {
+        "Authors": [
+            {
+                "Email": "noreply@bookos",
+                "Name": "BookOS"
+            }
+        ],
+        "Category": "Plasma 6 Window Decorations",
+        "Description": "BookOS App-style window decoration (Dark, reference buttons)",
+        "EnabledByDefault": true,
+        "Id": "BookOS-App-Dark-Reference",
+        "License": "GPL-3.0",
+        "Name": "BookOS-App-Dark-Reference",
+        "ServiceTypes": [
+            "aurorae"
+        ],
+        "Version": "1.0"
+    }
+}
